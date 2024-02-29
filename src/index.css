@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+    /* border: 1px solid red; */
+    font-family: 'Roboto', Arial, Helvetica, sans-serif
+}
+
+.container2 {
+    position: relative;
+}
+
+.overlap3 {
+    position: absolute;
+    top: 1;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+    background-color: #fdfdfd;
+  }
+  
+  #content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+  }
+  
+  #footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;            /* Footer height */
+  }
+
+
+/* xs breakpoint */
+@media only screen and (min-width: 576px) {
+
+}
+
+/* sm breakpoint */
+@media only screen and (min-width: 640px) {
+
+}
+
+/* md breakpoint */
+@media only screen and (min-width: 768px) {
+}
+
+/* lg breakpoint */
+@media only screen and (min-width: 1024px) {
+}
+
+/* xl breakpoint */
+@media only screen and (min-width: 1280px) {
+}
+
+/* 2xl breakpoint */
+@media only screen and (min-width: 1536px) {
+}
