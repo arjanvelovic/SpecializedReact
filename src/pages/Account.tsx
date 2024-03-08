@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 import API_URL from '../assets/info/URLInfo'
 
@@ -8,6 +8,7 @@ function Account() {
     // Populates page info /////////////////////////////
     const [token, setToken] = useState();
     const [userinfo, setUserInfo] = useState<any>([]);
+    const navigate = useNavigate()
 
     const ClearToken = (event: any) => {
         event.preventDefault();
@@ -41,9 +42,7 @@ function Account() {
         <div className="mt-6">
           <p className="text-lg text-center">Sign In To See Account</p>
           <div className="flex justify-items-center justify-center mt-2">
-            <ColorButton className='p-3'>
-              <Link to="/signin">Sign In</Link>
-            </ColorButton>
+          <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
           </div>
           <div className="flex justify-items-center justify-center">
             <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
@@ -63,15 +62,10 @@ function Account() {
             </div>
 
             <div className="col-span-2 grid h-fit gap-y-2">
-                <ColorButton className="py-2">
-                    <Link to="/editaccount">Edit Account</Link>
-                </ColorButton>
-                <ColorButton className="py-2">
-                    <Link to="/cart">Cart</Link>
-                </ColorButton>
-                <ColorButton className="py-2">
-                    <Link to="/orders">Orders</Link>
-                </ColorButton>
+                <ColorButton className="py-2" onClick={() => {navigate("/editaccount")}}>Edit Account</ColorButton>
+                <ColorButton className="py-2" onClick={() => {navigate("/cart")}}>Cart</ColorButton>
+                <ColorButton className="py-2" onClick={() => {navigate("/orders")}}>Orders</ColorButton>
+                
                 <button className="bg-slate-100 text-slate-700 border border-slate-700 hover:bg-slate-700 hover:text-slate-100 transition duration-700 rounded py-2" onClick={ClearToken}>
                     Sign Out
                 </button>

@@ -1,4 +1,5 @@
 import Home from '../pages/Home'
+import NotFound from '../pages/NotFound'
 import Cart from '../pages/Cart'
 import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
@@ -17,9 +18,14 @@ interface RouteType {
 
 const routes: RouteType[] = [
     {
-      path: "",
+      path: "/",
       component: Home,
       name: "Home Screen",
+    },
+    {
+      path: "*",
+      component: NotFound,
+      name: "notfound",
     },
     {
       path: "/categories/:category",

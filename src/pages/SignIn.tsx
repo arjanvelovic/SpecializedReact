@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 
 import TextField from '@mui/material/TextField'
@@ -17,6 +17,7 @@ import API_URL from '../assets/info/URLInfo'
 function SignIn() {
 
     const [token, setToken] = useState();
+    const navigate = useNavigate()
 
     useEffect(() => {
         // @ts-ignore
@@ -25,6 +26,19 @@ function SignIn() {
         setToken(token);
         }
     }, []);
+
+    // Handles API Error
+    const [error, setError] = useState<any>();
+
+    if (error === undefined){
+        var errorDiv =
+        <></>
+    } else {
+        var errorDiv =
+        <div className=" bg-red-400 text-white py-2 px-4 rounded mt-2">
+            {error}
+        </div> 
+    }
 
     // Handles showing password ////////////////////////
     const [showPassword, setShowPassword] = useState(false);
@@ -46,7 +60,12 @@ function SignIn() {
                 'Authorization': 'Basic ' + btoa(email + ":" + password),
             },
             })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.status !== 200) {
+                setError("Incorrect e-mail and/or password")
+            }
+            return response.json()
+        })
         .then((response) => {
             if (response.token !== undefined){
                 localStorage.setItem('token', JSON.stringify(response.token))
@@ -54,8 +73,9 @@ function SignIn() {
             }
         })
         .catch((error) => {
-        console.error(error);
-        });
+            console.error(error);
+            setError("Something went wrong. Please try again")
+        })
     }
 
     // Navigates to homepage after signup ///////////////////////
@@ -71,7 +91,7 @@ function SignIn() {
     if (token === undefined){
         var signin_html =
         <>
-        <form onSubmit={SignIn} className="grid grid-cols-6 w-11/12 md:w-3/5 2xl:w-1/3 mt-6 gap-x-4 gap-y-3 justify-center">
+        <form onSubmit={SignIn} className="grid grid-cols-6 w-11/12 md:w-3/5 2xl:w-1/3 mt-4 gap-x-4 gap-y-3 justify-center">
                 
                 <TextField name="email" label="e-mail" className="col-span-6" required type="email"/>
                 <FormControl className="col-span-6">
@@ -110,9 +130,7 @@ function SignIn() {
         <>
         <h1 className="text-center text-lg mt-6 col-span-6">Your Are Already Signed In</h1>
         <div className="col-span-6 flex justify-center mt-2">
-            <ColorButton className='py-2 px-4'>
-            <Link to="/account">Account</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-4" onClick={() => {navigate("/account")}}>Account</ColorButton>
         </div>
         </>
     }
@@ -121,6 +139,7 @@ function SignIn() {
     <div className=" py-10 flex justify-center">
         <div className="container flex flex-col items-center">
             <h1 className="text-2xl border-b-2 w-11/12 md:w-3/5 2xl:w-1/3 text-center">Sign In</h1>
+            {errorDiv}
             {signin_html}
         </div>
     </div>

@@ -7,6 +7,7 @@ import API_URL from '../assets/info/URLInfo'
 
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
 
 function CheckOut() {
 
@@ -23,6 +24,10 @@ function CheckOut() {
   const [address_state, setAddressState] = useState<any>();
   const [address_zipcode, setAddressZipCode] = useState<any>();
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
   // @ts-ignore
@@ -81,6 +86,19 @@ function CheckOut() {
   const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
   const years = ['24', '25', '26', '27', '28', '29', '30']
 
+  // Handles API Error
+  const [error, setError] = useState<any>();
+
+  if (error === undefined){
+      var errorDiv =
+      <></>
+  } else {
+      var errorDiv =
+      <div className=" bg-red-400 text-white py-2 px-4 rounded mt-2">
+          {error}
+      </div> 
+  }
+
 // Handles Form Submit ///////////////////////////////////////
   const PlaceOrderForm = (event: any) => {
     event.preventDefault();
@@ -119,14 +137,20 @@ function CheckOut() {
             tax: tax,
         })
         })
-    .then((response) => response.json())
+      .then((response) => {
+        if (response.status !== 200) {
+            setError("Something went wrong. Please try again")
+        }
+        return response.json()
+      })
+      // @ts-ignore
     .then((response) => {
         ClearCart()
-        setCompletedFetch(true)
-        console.log(response);
+        handleOpen()
         })
     .catch((error) => {
-    console.error(error);
+      console.error(error);
+      setError("Something went wrong. Please try again")
     });
   }
 
@@ -144,15 +168,6 @@ function CheckOut() {
         });
         }
 
-// Handles navigation after submit ///////////////////////////////////////
-  const navigate = useNavigate()
-  const [completedfetch, setCompletedFetch] = useState<boolean>(false);
-  useEffect(() => {
-      if (completedfetch){
-        navigate("/orders")
-      }
-  }, [completedfetch]);
-
 
 // Conditional Rendering if not Signed in /////////////////////////
   if (token == undefined){
@@ -160,9 +175,7 @@ function CheckOut() {
     <>
       <h1 className="text-center text-lg mt-6 col-span-6">Sign In to Check Out</h1>
       <div className="col-span-6 flex justify-center mt-2">
-        <ColorButton className='py-2 px-4'>
-          <Link to="/signin">Sign In</Link>
-        </ColorButton>
+        <ColorButton className="py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
       </div>
       <div className="col-span-6 flex justify-center mt-2">
         <Link to="/signup" className="text-xs hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
@@ -172,11 +185,9 @@ function CheckOut() {
     if (cart.length === 0){
       var checkout_html =
       <>
-        <h1 className="text-center text-lg mt-6 col-span-6">You Have no Bikes to Check Out</h1>
+        <h1 className="text-center text-lg mt-6 col-span-6">You have no bikes to Check Out</h1>
         <div className="col-span-6 flex justify-center mt-2">
-          <ColorButton className='py-2 px-4'>
-            <Link to="/">Shop Bikes</Link>
-          </ColorButton>
+          <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
         </div>
       </>
     } else{
@@ -189,7 +200,7 @@ function CheckOut() {
             </div> 
             <div className="m-1 md:m-3 col-span-2">
               <Link to= {`/bike/${bike.model}`} className="uppercase font-semibold hover:text-red-600 underline-offset-4 hover:underline transition duration-500">{bike.model} {bike.trim}</Link>
-              <p className="mt-1">{bike.color}, {bike.size}cm</p>
+              <p className="mt-1">{bike.color}, {bike.size}</p>
               <p className="mt-1">Qty: {bike.quantity}</p>
               <p className="mt-1">${bike.cart_itemtotal}</p>
             </div>
@@ -271,7 +282,24 @@ function CheckOut() {
     <div className=" py-8 flex justify-center flex-col place-items-center">
       <h1 className="text-2xl w-11/12 text-center">Check Out</h1>
       <h1 className="border-b-2 w-11/12 my-3"></h1>
+      {errorDiv}
       {checkout_html}
+      <Modal
+          open={open}
+          onClose={handleClose}
+      >
+          <div className="absolute h-screen w-screen flex justify-center items-center">
+              <div className="bg-white rounded-md py-7 px-5 max-w-full">
+                  <p className="mt-1">
+                      Your Order Has Been Placed!
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 mt-5">
+                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/orders")}}>Go to Orders</ColorButton>
+                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/")}}>Continue Shopping</ColorButton>
+                  </div>
+              </div>
+          </div>
+      </Modal>
     </div>
     
   )

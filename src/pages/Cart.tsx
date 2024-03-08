@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 import ModelInfo from "../assets/info/ModelInfo"
 import API_URL from '../assets/info/URLInfo'
@@ -10,6 +10,7 @@ function Cart() {
   // Populates page info /////////////////////////////
   const [token, setToken] = useState();
   const [cart, setCart] = useState<any>([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
   //@ts-ignore
@@ -95,9 +96,7 @@ function Cart() {
     <>
       <h1 className="text-center text-lg mt-6 col-span-6">Sign In to See Your Cart</h1>
       <div className="col-span-6 flex justify-center">
-        <ColorButton className='py-2 px-4'>
-          <Link to="/signin">Sign In</Link>
-        </ColorButton>
+        <ColorButton className="py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
       </div>
       <div className="col-span-6 flex justify-center">
         <Link to="/signup" className="text-xs hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
@@ -109,9 +108,7 @@ function Cart() {
     <>
       <h1 className="text-center text-lg mt-6 col-span-6">Your Cart is Empty</h1>
       <div className="col-span-6 flex justify-center mt-2">
-        <ColorButton className='py-2 px-4'>
-          <Link to="/">Shop Bikes</Link>
-        </ColorButton>
+        <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
       </div>
     </>
   } else{
@@ -125,7 +122,7 @@ function Cart() {
           </div> 
           <div className="m-1 md:m-3 col-span-5 md:col-span-2 grid grid-cols-2 md:grid-cols-1 h-fit grid-flow-row-dense">
             <Link to= {`/bike/${bike.model}`} className="uppercase font-semibold hover:text-red-600 underline-offset-4 hover:underline transition duration-500">{bike.model} {bike.trim}</Link>
-            <p className="mt-1">{bike.color}, {bike.size}cm</p>
+            <p className="mt-1">{bike.color}, {bike.size}</p>
             <form onSubmit={UpdateQuantity} className="flex items-center gap-2 mt-1">
               <p>Qty:</p>
               <input className='hidden' name='cart_id' value={bike.cart_id} readOnly/>
@@ -152,9 +149,7 @@ function Cart() {
           <p className="mt-4 font-semibold text-end">${cartotal}.00</p>
           <p/>
           <div className="flex justify-end mt-1">
-            <ColorButton className="py-2 px-4 w-fit">
-              <Link to="/checkout">Check Out</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-4 w-fit" onClick={() => {navigate("/checkout")}}>Check Out</ColorButton>
           </div>
         </div>
       </div>

@@ -49,6 +49,19 @@ function EditAccount() {
     }
     }, []);
 
+    // Handles API Error
+    const [error, setError] = useState<any>();
+
+    if (error === undefined){
+        var errorDiv =
+        <></>
+    } else {
+        var errorDiv =
+        <div className=" bg-red-400 text-white py-2 px-4 rounded mt-2">
+            {error}
+        </div> 
+    }
+
     // Handles form submit ////////////////////////////
     const EditAccountForm = (event: any) => {
         event.preventDefault();
@@ -77,13 +90,19 @@ function EditAccount() {
             })
             
             })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.status !== 200) {
+                setError("Something went wrong. Please try again")
+            }
+            return response.json()
+        })
         .then((response) => {
             setCompletedFetch(true)
             console.log(response);
             })
         .catch((error) => {
-        console.error(error);
+            console.error(error);
+            setError("Something went wrong. Please try again")
         });
       }
     
@@ -102,9 +121,7 @@ function EditAccount() {
         <div className="mt-6">
           <p className="text-lg text-center">Sign In to Update Account</p>
           <div className="flex justify-items-center justify-center mt-2">
-            <ColorButton className='p-3'>
-              <Link to="/signin">Sign In</Link>
-            </ColorButton>
+            <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
           </div>
           <div className="flex justify-items-center justify-center">
             <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
@@ -145,6 +162,7 @@ function EditAccount() {
     <div className="py-10 flex justify-center">
         <div className="container flex flex-col items-center">
             <h1 className="text-2xl border-b-2 w-11/12 md:w-3/5 2xl:w-1/3 text-center">Update Account</h1>
+            {errorDiv}
             {editaccount}
         </div>
     </div>

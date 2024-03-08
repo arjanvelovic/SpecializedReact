@@ -8,3 +8,4 @@ export * from './Bike';
 export * from './Category';
 export * from './CheckOut';
 export * from './Orders';
+export * from './NotFound';

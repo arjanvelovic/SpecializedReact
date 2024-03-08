@@ -1,4 +1,3 @@
-
 //@ts-ignore
 import HomeVideo from '../assets/images/home/HomeVideo.mp4'
 //@ts-ignore
@@ -10,11 +9,13 @@ import MountainPic from '../assets/images/home/MountainPic.jpg'
 //@ts-ignore
 import ActivePic from '../assets/images/home/ActivePic.jpg'
 import ColorButton from "../components/ColorButton";
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 
 function Home() {
+  const navigate = useNavigate()
+
   return (
     <div className='pb-10'>
       <div className = 'container2'>
@@ -32,9 +33,7 @@ function Home() {
           <div className='col-span-2'>
             <h1 className='font-bold text-xl lg:text-2xl 2xl:text-3xl mb-1 uppercase'>Built For Speed</h1>
             <p className=' text-justify text-gray-500 text-sm md:text-base mb-1'>Whether it’s the alpine passes of the Tour or the rolling gravel roads outside of town, the Saturday club ride with friends or the crosswinds of Kona, our road bikes set the standard by which all others are measured.</p>
-            <ColorButton className="py-2 px-5 text-sm md:text-base">
-                <Link to="/categories/Road">Shop Road Bikes</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-5 text-sm md:text-base" onClick={() => {navigate("/categories/Road")}}>Shop Road Bikes</ColorButton>
           </div>
           <div className='col-span-3'>
             <img src={RoadPic} className='rounded-lg'/>
@@ -45,9 +44,7 @@ function Home() {
           <div className='col-span-2 md:hidden mt-6'>
           <h1 className='font-bold text-xl lg:text-2xl 2xl:text-3xl mb-1 uppercase'>Conquer the Trails</h1>
             <p className='text-justify text-gray-500 text-sm md:text-base mb-1'>Embark on thrilling adventures with our top-notch mountain bikes! Engineered for rugged terrain, conquer any trail with precision and style. Reach new heights of performance and excitement!</p>
-            <ColorButton className="py-2 px-5 text-sm md:text-base">
-                <Link to="/categories/Mountain">Shop Mountain Bikes</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-5 text-sm md:text-base" onClick={() => {navigate("/categories/Mountain")}}>Shop Mountain Bikes</ColorButton>
           </div>
 
           <div className='col-span-3'>
@@ -57,17 +54,13 @@ function Home() {
           <div className='col-span-2 text-end hidden md:block'>
           <h1 className='font-bold text-xl lg:text-2xl 2xl:text-3xl mb-1 uppercase'>Conquer the Trails</h1>
             <p className=' text-end text-gray-500 text-sm md:text-base mb-1'>Embark on thrilling adventures with our top-notch mountain bikes! Engineered for rugged terrain, conquer any trail with precision and style. Reach new heights of performance and excitement!</p>
-            <ColorButton className="py-2 px-5 text-sm md:text-base">
-                <Link to="/categories/Mountain">Shop Mountain Bikes</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-5 text-sm md:text-base" onClick={() => {navigate("/categories/Mountain")}}>Shop Mountain Bikes</ColorButton>
           </div>
 
           <div className='col-span-2 mt-6 md:mt-0'>
             <h1 className='font-bold text-xl lg:text-2xl 2xl:text-3xl mb-1 uppercase'>Bikes For Your Life</h1>
             <p className=' text-justify text-gray-500 text-sm md:text-base mb-1'>Navigate city streets effortlessly with our sleek and reliable commuting bikes. Designed for urban warriors, enjoy smooth rides and eco-friendly travel. Conquer the concrete jungle in style!</p>
-            <ColorButton className="py-2 px-5 text-sm md:text-base">
-                <Link to="/categories/Active">Shop Active Bikes</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-5 text-sm md:text-base" onClick={() => {navigate("/categories/Active")}}>Shop Active Bikes</ColorButton>
           </div>
           <div className='col-span-3'>
             <img src={ActivePic} className='rounded-lg'/>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 import ModelInfo from "../assets/info/ModelInfo";
 import API_URL from '../assets/info/URLInfo'
@@ -9,7 +9,7 @@ function Orders() {
   // Populates page info /////////////////////////////
   const [token, setToken] = useState();
   const [orders, setOrders] = useState<any>([]);
-  
+  const navigate = useNavigate()
 
   useEffect(() => {
   // @ts-ignore
@@ -29,17 +29,15 @@ function Orders() {
   setToken(token);
   }
   }, []);
+  
 
   // Conditional rendering if not signed in ///////////////////////
-
   if (token === undefined){
       var order_html =
       <div className="mt-6">
         <p className="text-lg text-center">Sign In To See Your Orders</p>
         <div className="flex justify-items-center justify-center mt-2">
-          <ColorButton className='p-3'>
-            <Link to="/signin">Sign In</Link>
-          </ColorButton>
+          <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
         </div>
         <div className="flex justify-items-center justify-center">
           <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
@@ -51,9 +49,7 @@ function Orders() {
       <div className="mt-6">
         <p className="text-lg text-center">Your Have No Orders</p>
         <div className="flex justify-items-center justify-center mt-2">
-          <ColorButton className='p-3'>
-            <Link to="/">Shop Bikes</Link>
-          </ColorButton>
+          <ColorButton className="p-3" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
         </div>
       </div>
 
@@ -89,7 +85,7 @@ function Orders() {
               </div> 
               <div className="m-1 md:m-3 col-span-2">
                 <Link to= {`/bike/${item.model}`} className="uppercase font-semibold hover:text-red-600 underline-offset-4 hover:underline transition duration-500">{item.model} {item.trim}</Link>
-                <p className="mt-1">{item.color}, {item.size}cm</p>
+                <p className="mt-1">{item.color}, {item.size}</p>
                 <p className="mt-1">Qty: {item.quantity}</p>
               </div>
             </div>

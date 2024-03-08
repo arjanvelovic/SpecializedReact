@@ -4,9 +4,9 @@ const ModelInfo:any = {
             'Smoke':['images/Bikes/Allez/Smoke0.webp', 'images/Bikes/Allez/Smoke1.webp'],
             'Lagoon Blue':['images/Bikes/Allez/Lagoon0.webp', 'images/Bikes/Allez/Lagoon1.webp'],
             'Maroon': ['images/Bikes/Allez/Maroon0.webp', 'images/Bikes/Allez/Maroon1.webp']},
-        'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
+        'sizes' : [49, 52, 54, 56, 58, 61],
         'trims' : {
-            '': {'cost': 1200.00,
+            'Base': {'cost': 1200.00,
                 'stem': '3D-forged alloy, 31.8mm, 7-degree rise',
                 'seatpost': 'Alloy, 2-bolt Clamp, 12mm offset, 27.2mm, anti-corrosion hardware',
                 'saddle': 'Body Geometry Bridge Saddle, steel rails',
@@ -92,7 +92,7 @@ const ModelInfo:any = {
             'Ghost Pearl':['images/Bikes/Tarmac/GhostPearl0.webp', 'images/Bikes/Tarmac/GhostPearl1.webp'],
             'Black':['images/Bikes/Tarmac/Black0.webp', 'images/Bikes/Tarmac/Black1.webp'],
             'Pine Green': ['images/Bikes/Tarmac/PineGreen0.webp', 'images/Bikes/Tarmac/PineGreen1.webp']},
-        'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
+        'sizes' : [49, 52, 54, 56, 58, 61],
         'trims' : {
             'SL6': {'cost': 2500.00,
                 'stem': 'Specialized, 3D-forged alloy, 4-bolt, 7-degree rise',
@@ -213,9 +213,9 @@ const ModelInfo:any = {
             'Smoke':['images/Bikes/Roubaix/Smoke0.webp', 'images/Bikes/Roubaix/Smoke1.webp'],
             'UV Lilac':['images/Bikes/Roubaix/UVLilac0.webp', 'images/Bikes/Roubaix/UVLilac1.webp'],
             'Doppio': ['images/Bikes/Roubaix/Doppio0.webp', 'images/Bikes/Roubaix/Doppio1.webp']},
-        'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
+        'sizes' : [49, 52, 54, 56, 58, 61],
         'trims' : {
-            '': {
+            'Base': {
                 'cost': 2700.00,
                 'stem': 'Future Stem, Comp',
                 'seatpost': 'S-Works Pave',
@@ -317,7 +317,7 @@ const ModelInfo:any = {
             'Birch':['images/Bikes/Diverge/Birch0.webp', 'images/Bikes/Diverge/Birch1.webp'],
             'Redwood':['images/Bikes/Diverge/Redwood0.webp', 'images/Bikes/Diverge/Redwood1.webp'],
             'Midnight Shadow': ['images/Bikes/Diverge/MidnightShadow0.webp', 'images/Bikes/Diverge/MidnightShadow1.webp']},
-        'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
+        'sizes' : [49, 52, 54, 56, 58, 61],
         'trims' : {
             'E5': {
                 'cost': 1300.00,
@@ -488,7 +488,7 @@ const ModelInfo:any = {
             'Tarmac Black':['images/Bikes/Rockhopper/TarmacBlack0.webp', 'images/Bikes/Rockhopper/TarmacBlack1.webp'],
             'Flo Red':['images/Bikes/Rockhopper/FloRed0.webp', 'images/Bikes/Rockhopper/FloRed1.webp'],
             'Cast Blue Metallic': ['images/Bikes/Rockhopper/CastBlueMetallic0.webp', 'images/Bikes/Rockhopper/CastBlueMetallic1.webp']},
-        'sizes' : [50, 52, 54, 56, 58, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             '29': {
                 'cost': 650.00,
@@ -574,7 +574,7 @@ const ModelInfo:any = {
             'Blaze':['images/Bikes/Stumpjumper/Blaze0.webp', 'images/Bikes/Stumpjumper/Blaze1.webp'],
             'Black':['images/Bikes/Stumpjumper/Black0.webp', 'images/Bikes/Stumpjumper/Black1.webp'],
             'White Sage': ['images/Bikes/Stumpjumper/WhiteSage0.webp', 'images/Bikes/Stumpjumper/WhiteSage1.webp']},
-        'sizes' : [50, 52, 54, 56, 58, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             'Alloy': {
                 'cost': 2800.00,
@@ -677,7 +677,7 @@ const ModelInfo:any = {
         'colors' : {
             'Desert Rose':['images/Bikes/Demo/DesertRose0.webp', 'images/Bikes/Demo/DesertRose1.webp'],
             'Metallic Dark Navy': ['images/Bikes/Demo/MetallicDarkNavy0.webp', 'images/Bikes/Demo/MetallicDarkNavy1.webp']},
-        'sizes' : [52, 54, 56, 58, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             'Expert': {
                 'cost': 5600.00,
@@ -727,7 +727,7 @@ const ModelInfo:any = {
             'Birch':['images/Bikes/Epic/Birch0.webp', 'images/Bikes/Epic/Birch1.webp'],
             'Redwood':['images/Bikes/Epic/Redwood0.webp', 'images/Bikes/Epic/Redwood1.webp'],
             'Midnight Shadow': ['images/Bikes/Epic/MidnightShadow0.webp', 'images/Bikes/Epic/MidnightShadow1.webp']},
-        'sizes' : [50, 52, 54, 56, 58, 62],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             'Hardtail': {
                 'cost': 2500.00,
@@ -832,7 +832,7 @@ const ModelInfo:any = {
             'Artic Blue':['images/Bikes/Fuse/ArticBlue0.webp', 'images/Bikes/Fuse/ArticBlue1.webp'],
             'Cast Blue': ['images/Bikes/Fuse/CastBlue0.webp', 'images/Bikes/Fuse/CastBlue1.webp'],
             'Terra Cotta': ['images/Bikes/Fuse/TerraCotta0.webp', 'images/Bikes/Fuse/TerraCotta1.webp']},
-        'sizes' : [49, 52, 54, 56, 58, 61],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             '27.5': {
                 'cost': 1500.00,
@@ -919,7 +919,7 @@ const ModelInfo:any = {
             'Black':['images/Bikes/Sirrus/Black0.webp', 'images/Bikes/Sirrus/Black1.webp'],
             'Sky Blue': ['images/Bikes/Sirrus/SkyBlue0.webp', 'images/Bikes/Sirrus/SkyBlue1.webp'],
             'Fiery Red': ['images/Bikes/Sirrus/FieryRed0.webp', 'images/Bikes/Sirrus/FieryRed1.webp']},
-        'sizes' : [50, 52, 54, 56, 58, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             '1.0': {
                 'cost': 650.00,
@@ -1025,7 +1025,7 @@ const ModelInfo:any = {
             'Cool Grey':['images/Bikes/Roll/CoolGrey0.webp', 'images/Bikes/Roll/CoolGrey1.webp'],
             'Tarmac Black': ['images/Bikes/Roll/TarmacBlack0.webp', 'images/Bikes/Roll/TarmacBlack1.webp'],
             'Redwood': ['images/Bikes/Roll/Redwood0.webp', 'images/Bikes/Roll/Redwood1.webp']},
-        'sizes' : [52, 54, 56, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             '2.0': {
                 'cost': 700.00,
@@ -1111,7 +1111,7 @@ const ModelInfo:any = {
             'Cast Black':['images/Bikes/TurboVado/CastBlack0.webp', 'images/Bikes/TurboVado/CastBlack1.webp'],
             'White Mountains':['images/Bikes/TurboVado/WhiteMountains0.webp', 'images/Bikes/TurboVado/WhiteMountains1.webp'],
             'Red Tint': ['images/Bikes/TurboVado/RedTint0.webp', 'images/Bikes/TurboVado/RedTint1.webp']},
-        'sizes' : [52, 54, 56, 60],
+        'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
         'trims' : {
             '3.0': {
                 'cost': 3250.00,

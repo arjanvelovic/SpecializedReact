@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ModelInfo from "../assets/info/ModelInfo"
 import API_URL from '../assets/info/URLInfo'
 import ColorButton from "../components/ColorButton";
 //@ts-ignore
-import sizechart from '../assets/images/Bikes/sizechart.jpg'
+import SizeChartNumbersBig from '../assets/images/Bikes/SizeChartNumbersBig.png'
 //@ts-ignore
-import SizeChartSmall from '../assets/images/Bikes/SizeChartSmall.png'
+import SizeChartNumbersSmall from '../assets/images/Bikes/SizeChartNumbersSmall.png'
+//@ts-ignore
+import SizeChartLettersBig from '../assets/images/Bikes/SizeChartLettersBig.png'
+//@ts-ignore
+import SizeChartLettersSmall from '../assets/images/Bikes/SizeChartLettersSmall.png'
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Modal from '@mui/material/Modal';
 
 type ModelParams = {
     model: any;
@@ -21,8 +26,16 @@ function Bike() {
 
     // Populates page info /////////////////////////////
     const{model} = useParams<ModelParams>()
+    const roadmodels = ['Allez', 'Tarmac', 'Roubaix', 'Diverge', 'Crux']
     const bike = ModelInfo[model]
     const sizes = bike['sizes']
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [size, setSize] = useState()
+    const [color, setColor] = useState()
+    const navigate = useNavigate()
     
 
     // Get token and conditioanl rendering //////////////////
@@ -37,7 +50,7 @@ function Bike() {
 
     if (token === undefined){
         var user_add_cart =
-        <ColorButton className='text-lg py-2 px-4'>Sign In</ColorButton>
+        <ColorButton className="text-lg py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In to Add to Cart</ColorButton>
     } else{
         var user_add_cart =
         <ColorButton className="text-lg py-2 px-4" type="submit">Add to Cart</ColorButton>
@@ -46,7 +59,7 @@ function Bike() {
     // Adjust cost based on trim /////////////////////////
     const triminfo = bike['trims']
     const trims = Object.keys(triminfo)
-    const[trim, setTrim] = useState<any>(trims[trims.length-1])
+    const[trim, setTrim] = useState<any>(trims[0])
 
     function TrimSelected(trim:any){
         setTrim(trim)
@@ -60,10 +73,27 @@ function Bike() {
     // Adjust Image Based on Color /////////////////////////
     const colorinfo = ModelInfo[model]['colors']
     const colors = Object.keys(colorinfo)
-    const [pictures, setPictures] = useState<any>(colorinfo[colors[colors.length-1]])
+    const [pictures, setPictures] = useState<any>(colorinfo[colors[0]])
 
     function ColorSelected(color:any){
         setPictures(colorinfo[color])
+    }
+
+    // Adjust Chart Based on Model
+    if(roadmodels.includes(model)){
+        var ChartDiv = 
+        <>
+            <img src={SizeChartNumbersBig} className='hidden md:block w-full border-2 border-gray-400 rounded'/>
+            <img src={SizeChartNumbersSmall} className='md:hidden w-full border-2 border-gray-400 rounded max-w-96'/>
+        </>
+
+    } else {
+        var ChartDiv = 
+        <>
+            <img src={SizeChartLettersBig} className='hidden md:block w-full border-2 border-gray-400 rounded'/>
+            <img src={SizeChartLettersSmall} className='md:hidden w-full border-2 border-gray-400 rounded max-w-96'/>
+        </>
+
     }
     
     // Handles form submit /////////////////////
@@ -74,6 +104,9 @@ function Bike() {
         const trim = target.trims.value;
         const size = target.sizes.value;
         const quantity = 1
+
+        setColor(color)
+        setSize(size)
         
         return fetch(`${API_URL}/usercart/${token}`, {
             method: 'POST',
@@ -91,7 +124,7 @@ function Bike() {
         .then((response) => response.json())
         //@ts-ignore
         .then((response) => {
-            setCompletedFetch(true)
+            handleOpen()
             // console.log(response);
             })
         .catch((error) => {
@@ -99,21 +132,12 @@ function Bike() {
         });
       }
     
-    // Navigate after successful form submit ////////////////////
-    const navigate = useNavigate()
-    const [completedfetch, setCompletedFetch] = useState<boolean>(false);
-    useEffect(() => {
-        if (completedfetch){
-            navigate("/cart")
-        }
-    }, [completedfetch]);
 
-      
   return (
     <div className="py-10 flex justify-center">
         <div className="flex flex-col items-center container mx-2">
             <div className="grid grid-cols-5 gap-x-6 justify-center border border-slate-300 rounded p-2">
-                <h1 className="text-2xl col-span-5 flex md:hidden">{model}</h1>
+                <h1 className="text-2xl col-span-5 flex md:hidden mb-3">{model} {trim}</h1>
                 <div className="col-span-5 md:col-span-3 xl:col-span-4 grid gap-y-3">
 
                     {pictures.map((picture:any) => (
@@ -122,51 +146,108 @@ function Bike() {
                     
                 </div>
                 <div className="col-span-5 md:col-span-2 xl:col-span-1">
-                    <h1 className="text-2xl hidden md:flex">{model}</h1>
+                    <h1 className="text-2xl hidden md:flex">{model} {trim}</h1>
                     <p className="text-xl mt-2 hidden md:flex"> ${triminfo[trim]['cost']}</p>
 
                     <form onSubmit={AddtoCart} className="">
 
                         <div className="mt-4 font-bold">Colors:</div>
-                        <fieldset id = "colors" className="grid grid-cols-3 w-fit gap-3">
-                        {colors.map((color:any) => (
-                            <div className="" key={color}>
-                                <input type="radio" id={color} value={color} defaultChecked name="colors" className="hidden peer" onClick={() => {
-                                    ColorSelected(color)
-                                }}/>
-                                <label htmlFor={color} className="inline-flex w-full place-content-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{color}</label>
-                            </div>
-                        ))}
+                        <fieldset id = "colors" className="grid grid-cols-4 md:grid-cols-3 w-fit gap-3">
+                        {colors.map((color:any, i: number) => {
+                            if (i == 0){
+                                return(  
+                                <div className="" key={color}>
+                                    <input type="radio" id={color} value={color} defaultChecked name="colors" className="hidden peer" onClick={() => {
+                                        ColorSelected(color)}}/>
+                                    <label htmlFor={color} className="inline-flex w-full h-full text-center place-content-center place-items-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{color}</label>
+                                </div>
+                            )
+
+                            }else{
+                                return(  
+                                    <div className="" key={color}>
+                                        <input type="radio" id={color} value={color} name="colors" className="hidden peer" onClick={() => {
+                                            ColorSelected(color)}}/>
+                                        <label htmlFor={color} className="inline-flex w-full h-full text-center place-content-center place-items-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{color}</label>
+                                    </div>
+                                )
+
+                            }
+                        })}
                         </fieldset>
 
                         <div className="mt-4 font-bold">Sizes:</div>
+                        <fieldset id = "sizes" className="grid grid-cols-6 md:grid-cols-4 w-fit gap-3">
+                        {sizes.map((size:any, i:number) => {
+                            if (i == 0){
+                                return(
+                                    <div className="" key={size}>
+                                        <input type="radio" id={size} value={size} defaultChecked name="sizes" className="hidden peer"/>
+                                        <label htmlFor={size} className="inline-flex py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{size}</label>
+                                    </div>
+                                )
+                            } else {
+                                return(
+                                    <div className="" key={size}>
+                                        <input type="radio" id={size} value={size} name="sizes" className="hidden peer"/>
+                                        <label htmlFor={size} className="inline-flex py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{size}</label>
+                                    </div>
+                                )
 
-                        <fieldset id = "sizes" className="grid grid-cols-3 w-fit gap-3">
-                        {sizes.map((size:any) => (
-                            <div className="" key={size}>
-                                <input type="radio" id={size} value={size} defaultChecked name="sizes" className="hidden peer" />
-                                <label htmlFor={size} className="inline-flex py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{size}</label>
-                            </div>
-                        ))}
+                            }
+                        }
+                        )}
                         </fieldset>
 
                         <div className="mt-4 font-bold">Trims:</div>
+                        <fieldset id = "trims" className="grid grid-cols-5 md:grid-cols-3 w-fit gap-3">
+                        {trims.map((trim:any, i:number) =>{
+                            if (i == 0){
+                                return(
+                                    <div className="" key={trim}>
+                                        <input type="radio" id={trim} value={trim} defaultChecked name="trims" className="hidden peer" onClick={() => {
+                                            TrimSelected(trim)}}/>
+                                        <label htmlFor={trim} className="inline-flex w-full h-full text-center place-content-center place-items-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100">{trim}</label>
+                                    </div>
+                                )
 
-                        <fieldset id = "trims" className="grid grid-cols-3 w-fit gap-3">
-                        {trims.map((trim:any) => (
-                            <div className="" key={trim}>
-                                <input type="radio" id={trim} value={trim} defaultChecked name="trims" className="hidden peer" onClick={() => {
-                                    TrimSelected(trim)
-                                }}/>
-                                <label htmlFor={trim} className="inline-flex w-full place-content-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 "> {model} {trim}</label>
-                            </div>
-                        ))}
+                            }else{
+                                return(
+                                    <div className="" key={trim}>
+                                        <input type="radio" id={trim} value={trim} name="trims" className="hidden peer" onClick={() => {
+                                            TrimSelected(trim)}}/>
+                                        <label htmlFor={trim} className="inline-flex w-full h-full text-center place-content-center place-items-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100">{trim}</label>
+                                    </div>
+                                )
+                            }
+                        })}
                         </fieldset>
-                        <p className="text-xl mt-2 flex md:hidden"> ${triminfo[trim]['cost']}</p>
+                        <p className="text-xl mt-6 flex md:hidden"> ${triminfo[trim]['cost']}</p>
 
-                        <div className="mt-2">
+                        <div className="mt-6">
                             {user_add_cart}
                         </div>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <div className="absolute h-screen w-screen flex justify-center items-center">
+                                <div className="bg-white rounded-md py-7 px-5 max-w-full">
+                                    <h1 className="text-lg">
+                                        Specialized {model} {trim}
+                                        <span className="text-gray-400">, {color} {size}</span>
+                                    </h1>
+                                    <p className="mt-1">
+                                        has been added to your cart!
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-2 mt-5">
+                                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/cart")}}>Go to Cart</ColorButton>
+                                    <ColorButton className='py-2 px-3' onClick={() => {setOpen(false)}}>Continue Shopping</ColorButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </Modal>
+
                     </form>
                 </div>
             </div>
@@ -284,8 +365,7 @@ function Bike() {
                     <h1 className="uppercase text-xl">Size Chart</h1>
                     </AccordionSummary>
                     <AccordionDetails className="flex justify-center">
-                        <img src={sizechart} className='hidden md:block w-full border-2 border-gray-400 rounded'/>
-                        <img src={SizeChartSmall} className='md:hidden w-full border-2 border-gray-400 rounded max-w-96'/>
+                        {ChartDiv}
                     </AccordionDetails>
                 </Accordion>
             </div>

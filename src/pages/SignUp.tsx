@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TaxInfo from "../assets/info/TaxInfo"
 import ColorButton from "../components/ColorButton";
 import API_URL from '../assets/info/URLInfo'
@@ -17,6 +17,19 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 function SignUp() {
 
     const [token, setToken] = useState();
+    const [error, setError] = useState<any>();
+    const navigate = useNavigate()
+
+    if (error === undefined){
+        var errorDiv =
+        <></>
+
+    } else {
+        var errorDiv =
+        <div className=" bg-red-400 text-white py-2 px-4 rounded mt-2">
+            {error}
+        </div> 
+    }
 
     useEffect(() => {
         // @ts-ignore
@@ -69,17 +82,19 @@ function SignUp() {
                 address_state: address_state,
                 address_zipcode: address_zipcode,
             })
-            
             })
-        .then((response) => response.json())
         .then((response) => {
-            // console.log(response.token);
+            if (response.status === 500 ) {
+                setError("This e-mail is already associated with an account")
+            } else if (response.status !== 200) {
+                setError("Something went wrong. Please try again")
+            }
+            return response.json()
+        })
+        .then((response) => {
             localStorage.setItem('token', JSON.stringify(response.token))
             setCompletedFetch(true)
             })
-        .catch((error) => {
-        console.error(error);
-        });
       }
     
     // Navigates to homepage after signup ///////////////////////
@@ -148,9 +163,7 @@ function SignUp() {
         <>
         <h1 className="text-center text-lg mt-6 col-span-6">Your Are Already Signed In</h1>
         <div className="col-span-6 flex justify-center mt-2">
-            <ColorButton className='py-2 px-4'>
-                <Link to="/account">Account</Link>
-            </ColorButton>
+            <ColorButton className="py-2 px-4" onClick={() => {navigate("/account")}}>Account</ColorButton>
         </div>
         </>
     }
@@ -159,6 +172,7 @@ function SignUp() {
     <div className="py-10 flex justify-center">
         <div className="container flex flex-col items-center">
             <h1 className="text-2xl border-b-2 w-11/12 md:w-3/5 2xl:w-1/3 text-center">Create an Account</h1>
+            {errorDiv}
             {signup_html}
         </div>
     </div>
