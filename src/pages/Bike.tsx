@@ -17,6 +17,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Modal from '@mui/material/Modal';
+import CircularProgress from '@mui/material/CircularProgress';
 
 type ModelParams = {
     model: any;
@@ -95,6 +96,14 @@ function Bike() {
         </>
 
     }
+
+    // Handles loading while waiting for api //////////////////
+    const [isLoading, setIsLoading] = useState(false);
+    if (isLoading) {
+        var loading_html = <CircularProgress color="primary" className=""/>
+    } else {
+        var loading_html = <></>
+    }
     
     // Handles form submit /////////////////////
     const AddtoCart = (event: any)  => {
@@ -107,6 +116,7 @@ function Bike() {
 
         setColor(color)
         setSize(size)
+        setIsLoading(true);
         
         return fetch(`${API_URL}/usercart/${token}`, {
             method: 'POST',
@@ -124,8 +134,8 @@ function Bike() {
         .then((response) => response.json())
         //@ts-ignore
         .then((response) => {
+            setIsLoading(false)
             handleOpen()
-            // console.log(response);
             })
         .catch((error) => {
         console.error(error);
@@ -224,8 +234,9 @@ function Bike() {
                         </fieldset>
                         <p className="text-xl mt-6 flex md:hidden"> ${triminfo[trim]['cost']}</p>
 
-                        <div className="mt-6">
+                        <div className="mt-6 flex">
                             {user_add_cart}
+                            {loading_html}
                         </div>
                         <Modal
                             open={open}

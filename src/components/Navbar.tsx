@@ -24,6 +24,15 @@ function Navbar() {
     window.location.href = "/"
     }
 
+    const ClearToken2 = (event: any) => {
+        event.preventDefault();
+        localStorage.clear()
+        window.location.href = "/"
+        setIsVisible(false)
+        setState(false);
+        setIsVisible2(false)
+        }
+
     useEffect(() => {
         //@ts-ignore
         const token = JSON.parse(localStorage.getItem('token'));
@@ -93,9 +102,7 @@ function Navbar() {
             <NavButton className='pt-2 text-end border-t' onClick={toggleDrawer(false)}>
                 <Link to="/cart">Cart</Link>
             </NavButton>
-            <NavButton className='pt-2 text-end border-t' onClick={()=>{
-                ClearToken
-                toggleDrawer(false)}}>
+            <NavButton className='pt-2 text-end border-t' onClick={ClearToken2}>
                 Sign Out
             </NavButton>
         </div>

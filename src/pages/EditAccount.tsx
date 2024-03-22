@@ -6,6 +6,7 @@ import API_URL from '../assets/info/URLInfo'
 
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function EditAccount() {
     const Tax = TaxInfo
@@ -23,15 +24,19 @@ function EditAccount() {
     const [address_state, setAddressState] = useState<any>();
     const [address_zipcode, setAddressZipCode] = useState<any>();
 
+    // Handles loading while waiting for api //////////////////
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
     // @ts-ignore
     const token = JSON.parse(localStorage.getItem('token'));
+    setIsLoading(true);
     if (token) {
         fetch(`${API_URL}/user/${token}`, {
             method: 'GET'})
         .then((response) => response.json())
         .then((response) => {
-            // console.log(response);
+            setIsLoading(false)
             setUserInfo(response)
             setFirstName(response.first_name)
             setLastName(response.last_name)
@@ -128,7 +133,16 @@ function EditAccount() {
           </div>
         </div>
     } else{
-      var editaccount=
+        if (isLoading) {
+            var editaccount =
+            <div className="mt-6">
+                <p className="text-lg text-center">Loading your account info</p>
+                <div className="w-full flex text-center justify-center">
+                    <LinearProgress className="mt-3 w-full"/>
+                </div>
+            </div>
+        } else {
+            var editaccount=
       <>
         <form onSubmit={EditAccountForm} className="grid grid-cols-6 w-11/12 md:w-3/5 2xl:w-1/3 mt-5 gap-x-4 gap-y-3 justify-center">
             <TextField name="first_name" label="First Name" className="col-span-6 md:col-span-3" required value={first_name} onChange={(event) => setFirstName(event.target.value)} InputLabelProps={{shrink: true}}/>
@@ -155,6 +169,8 @@ function EditAccount() {
             <div className="col-span-1"/>
         </form> 
         </>
+        }
+      
     }
       
 

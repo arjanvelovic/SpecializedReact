@@ -10,6 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import API_URL from '../assets/info/URLInfo'
 
@@ -47,12 +48,22 @@ function SignIn() {
         event.preventDefault();
     };
 
+    // Handles loading while waiting for api //////////////////
+    const [isLoading, setIsLoading] = useState(false);
+    if (isLoading == false) {
+        var loading_html = <></>
+    } else {
+        var loading_html = <CircularProgress color="primary" className="mt-4"/>
+    }
+
     // Handles Sign in form //////////////////////
     const SignIn = (event: any) => {
         event.preventDefault();
         const target = event.target;
         const email = target.email.value;
         const password = target.password.value;
+
+        setIsLoading(true);
   
         fetch(`${API_URL}/token`, {
             method: 'GET',
@@ -67,6 +78,7 @@ function SignIn() {
             return response.json()
         })
         .then((response) => {
+            setIsLoading(false)
             if (response.token !== undefined){
                 localStorage.setItem('token', JSON.stringify(response.token))
                 setCompletedFetch(true)
@@ -120,10 +132,12 @@ function SignIn() {
                 
                 <div className="col-span-1"/>
                 <ColorButton type="submit" children="Sign In" className="col-span-4 text-lg py-2"/>
-                <div className="col-span-1"/>
+                
+                
 
             </form>
             <Link to="/signup" className="text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
+            {loading_html}
         </>
     } else{
         var signin_html =

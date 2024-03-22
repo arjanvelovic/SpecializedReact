@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 import ModelInfo from "../assets/info/ModelInfo";
 import API_URL from '../assets/info/URLInfo'
+import LinearProgress from '@mui/material/LinearProgress';
 
 function Orders() {
 
@@ -11,15 +12,19 @@ function Orders() {
   const [orders, setOrders] = useState<any>([]);
   const navigate = useNavigate()
 
+  // Handles loading while waiting for api //////////////////
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
   // @ts-ignore
   const token = JSON.parse(localStorage.getItem('token'));
+  setIsLoading(true);
   if (token) {
       fetch(`${API_URL}/userpayments/${token}`, {
           method: 'GET'})
       .then((response) => response.json())
       .then((response) => {
-          // console.log(response);
+          setIsLoading(false)
           setOrders(response)
           })
       .catch((error) => {
@@ -44,6 +49,16 @@ function Orders() {
         </div>
       </div>
   } else{
+    if (isLoading) {
+      var order_html =
+      <div className="mt-6">
+          <p className="text-lg text-center">Loading your orders</p>
+          <div className="w-full flex text-center justify-center">
+              <LinearProgress className="mt-3 w-1/2"/>
+          </div>
+      </div>
+      
+  } else {
     if (orders.length === 0){
       var order_html =
       <div className="mt-6">
@@ -95,6 +110,8 @@ function Orders() {
           ))}
       </>
     }
+  }
+    
   }
 
   

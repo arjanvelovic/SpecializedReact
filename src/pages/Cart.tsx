@@ -3,6 +3,7 @@ import { Link, useNavigate} from "react-router-dom";
 import ColorButton from "../components/ColorButton";
 import ModelInfo from "../assets/info/ModelInfo"
 import API_URL from '../assets/info/URLInfo'
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 function Cart() {
@@ -12,15 +13,19 @@ function Cart() {
   const [cart, setCart] = useState<any>([]);
   const navigate = useNavigate()
 
+  // Handles loading while waiting for api //////////////////
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
   //@ts-ignore
   const token = JSON.parse(localStorage.getItem('token'));
+  setIsLoading(true);
   if (token) {
       fetch(`${API_URL}/usercart/${token}`, {
           method: 'GET'})
       .then((response) => response.json())
       .then((response) => {
-          // console.log(response);
+          setIsLoading(false)
           setCart(response)
           })
       .catch((error) => {
@@ -74,7 +79,6 @@ function Cart() {
     //@ts-ignore
     .then((response) => {
       setCompletedFetch(true)
-        // console.log(response);
       })
     .catch((error) => {
     console.error(error);
@@ -103,57 +107,67 @@ function Cart() {
       </div>
     </>
 } else{
-  if (cart.length === 0){
-    var cart_html =
-    <>
-      <h1 className="text-center text-lg mt-6 col-span-6">Your Cart is Empty</h1>
-      <div className="col-span-6 flex justify-center mt-2">
-        <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
-      </div>
-    </>
-  } else{
-    var cart_html =
-    <>
-      <div className="mt-4 col-span-6 md:col-span-4 grid gap-y-4 place-self-center">
-      {cart.map((bike:any) => (
-        <div key={bike.cart_id} className='bg-white border rounded border-slate-300 grid grid-cols-5'>
-          <div className="m-1 md:m-3 col-span-5 md:col-span-3">
-            <img src={ModelInfo[bike.model]['colors'][bike.color][0]} className='border-4 border-gray-100 rounded max-h-80'/>
-          </div> 
-          <div className="m-1 md:m-3 col-span-5 md:col-span-2 grid grid-cols-2 md:grid-cols-1 h-fit grid-flow-row-dense">
-            <Link to= {`/bike/${bike.model}`} className="uppercase font-semibold hover:text-red-600 underline-offset-4 hover:underline transition duration-500">{bike.model} {bike.trim}</Link>
-            <p className="mt-1">{bike.color}, {bike.size}</p>
-            <form onSubmit={UpdateQuantity} className="flex items-center gap-2 mt-1">
-              <p>Qty:</p>
-              <input className='hidden' name='cart_id' value={bike.cart_id} readOnly/>
-              <input className='border w-8 text-center' type="number" name='quantity' placeholder= {bike.quantity} />
-              <ColorButton className="p-1 text-xs" type="submit">Update</ColorButton>
-            </form>
-            <p className="mt-1">${bike.cart_itemtotal}</p>
-            <ColorButton onClick={() => RemoveFromCart(bike.cart_id)} className="text-xs p-2 mt-1 w-fit">Remove From Cart</ColorButton>
-          </div>
-          
+  if (isLoading == false) {
+    if (cart.length === 0){
+      var cart_html =
+      <>
+        <h1 className="text-center text-lg mt-6 col-span-6">Your Cart is Empty</h1>
+        <div className="col-span-6 flex justify-center mt-2">
+          <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
         </div>
-        ))}
-      </div>
-      <div className="mt-4 col-span-6 md:col-span-2 grid h-fit bg-white border border-slate-300 py-2 px-4 rounded w-full">
-      <h1 className="border-b-2 text-xl">Cart Summary</h1>
-        <div className="grid grid-cols-2 mt-1">
-          <p>Subtotal:</p>
-          <p className="text-end">${cartotal}.00</p>
-          <p>Shipping:</p>
-          <p className="text-end border-b">$0.00</p>
-          <p className="">Tax:</p>
-          <p className="text-end">Estimated at Checkout</p>
-          <p className="mt-4 font-semibold">Total:</p>
-          <p className="mt-4 font-semibold text-end">${cartotal}.00</p>
-          <p/>
-          <div className="flex justify-end mt-1">
-            <ColorButton className="py-2 px-4 w-fit" onClick={() => {navigate("/checkout")}}>Check Out</ColorButton>
+      </>
+    } else{
+      var cart_html =
+      <>
+        <div className="mt-4 col-span-6 md:col-span-4 grid gap-y-4 place-self-center">
+        {cart.map((bike:any) => (
+          <div key={bike.cart_id} className='bg-white border rounded border-slate-300 grid grid-cols-5'>
+            <div className="m-1 md:m-3 col-span-5 md:col-span-3">
+              <img src={ModelInfo[bike.model]['colors'][bike.color][0]} className='border-4 border-gray-100 rounded max-h-80'/>
+            </div> 
+            <div className="m-1 md:m-3 col-span-5 md:col-span-2 grid grid-cols-2 md:grid-cols-1 h-fit grid-flow-row-dense">
+              <Link to= {`/bike/${bike.model}`} className="uppercase font-semibold hover:text-red-600 underline-offset-4 hover:underline transition duration-500">{bike.model} {bike.trim}</Link>
+              <p className="mt-1">{bike.color}, {bike.size}</p>
+              <form onSubmit={UpdateQuantity} className="flex items-center gap-2 mt-1">
+                <p>Qty:</p>
+                <input className='hidden' name='cart_id' value={bike.cart_id} readOnly/>
+                <input className='border w-8 text-center' type="number" name='quantity' placeholder= {bike.quantity} />
+                <ColorButton className="p-1 text-xs" type="submit">Update</ColorButton>
+              </form>
+              <p className="mt-1">${bike.cart_itemtotal}</p>
+              <ColorButton onClick={() => RemoveFromCart(bike.cart_id)} className="text-xs p-2 mt-1 w-fit">Remove From Cart</ColorButton>
+            </div>
+            
+          </div>
+          ))}
+        </div>
+        <div className="mt-4 col-span-6 md:col-span-2 grid h-fit bg-white border border-slate-300 py-2 px-4 rounded w-full">
+        <h1 className="border-b-2 text-xl">Cart Summary</h1>
+          <div className="grid grid-cols-2 mt-1">
+            <p>Subtotal:</p>
+            <p className="text-end">${cartotal}.00</p>
+            <p>Shipping:</p>
+            <p className="text-end border-b">$0.00</p>
+            <p className="">Tax:</p>
+            <p className="text-end">Estimated at Checkout</p>
+            <p className="mt-4 font-semibold">Total:</p>
+            <p className="mt-4 font-semibold text-end">${cartotal}.00</p>
+            <p/>
+            <div className="flex justify-end mt-1">
+              <ColorButton className="py-2 px-4 w-fit" onClick={() => {navigate("/checkout")}}>Check Out</ColorButton>
+            </div>
           </div>
         </div>
+      </>
+    }
+  } else {
+    var cart_html =
+      <div className="mt-6 col-span-6">
+          <p className="text-lg text-center">Loading your cart</p>
+          <div className="w-full flex text-center justify-center">
+              <LinearProgress className="mt-3 w-1/2"/>
+          </div>
       </div>
-    </>
   }
 }
   

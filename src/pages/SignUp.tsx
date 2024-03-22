@@ -13,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function SignUp() {
 
@@ -49,6 +50,14 @@ function SignUp() {
         event.preventDefault();
     };
 
+    // Handles loading while waiting for api //////////////////
+    const [isLoading, setIsLoading] = useState(false);
+    if (isLoading == false) {
+        var loading_html = <></>
+    } else {
+        var loading_html = <CircularProgress color="primary" className="mt-4"/>
+    }
+
     // Handles signup form /////////////////////////////
     const SignUpForm = (event: any) => {
         event.preventDefault();
@@ -64,6 +73,7 @@ function SignUp() {
         const address_state = target.address_state.value;
         const address_zipcode = target.address_zipcode.value;
         
+        setIsLoading(true);
   
         fetch(`${API_URL}/user`, {
             method: 'POST',
@@ -92,6 +102,7 @@ function SignUp() {
             return response.json()
         })
         .then((response) => {
+            setIsLoading(false)
             localStorage.setItem('token', JSON.stringify(response.token))
             setCompletedFetch(true)
             })
@@ -157,6 +168,7 @@ function SignUp() {
             <div className="col-span-1"/>
             <ColorButton type="submit" children="Create Account" className="col-span-4 text-lg py-2"/>
             <div className="col-span-1"/>
+            <div className="col-span-6 text-center text-small">{loading_html}</div>
         </form>
     } else{
         var signup_html =
