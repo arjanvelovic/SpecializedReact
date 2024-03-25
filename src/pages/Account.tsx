@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ColorButton from "../components/ColorButton";
+import { Link } from "react-router-dom";
 import API_URL from '../assets/info/URLInfo'
+
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
+import SignOut from "../components/SignOut";
+
 import LinearProgress from '@mui/material/LinearProgress';
 
 function Account() {
@@ -9,15 +14,6 @@ function Account() {
     // Populates page info /////////////////////////////
     const [token, setToken] = useState();
     const [userinfo, setUserInfo] = useState<any>([]);
-    const navigate = useNavigate()
-
-    const ClearToken = (event: any) => {
-        event.preventDefault();
-        localStorage.clear()
-        window.location.href = "/"
-        }
-
-    // Handles loading while waiting for api //////////////////
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -40,29 +36,33 @@ function Account() {
     }
     }, []);
 
-    // Conditional rendering if not signed in ////////////////
+    // HTML if not signed in //////////////
     if (token === undefined){
         var accountinfo =
         <div className="mt-6">
           <p className="text-lg text-center">Sign In To See Account</p>
           <div className="flex justify-items-center justify-center mt-2">
-          <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
+          <LinkButton className="p-3" link="/signin" children="Sign In"/>
           </div>
           <div className="flex justify-items-center justify-center">
             <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
           </div>
         </div>
-    } else{
+    } 
+    // HTML if signed in //////////////
+    else{
+        // HTML if loadinging //////////////
         if (isLoading) {
             var accountinfo =
             <div className="mt-6">
                 <p className="text-lg text-center">Loading your account info</p>
                 <div className="w-full flex text-center justify-center">
-                    <LinearProgress className="mt-3 w-1/2"/>
+                    <LinearProgress className="mt-3 w-full"/>
                 </div>
-            </div>
-            
-        } else {
+            </div>   
+        } 
+        // HTML after loading ////////////// 
+        else {
             var accountinfo=
             <div className="w-11/12 grid grid-cols-6 mt-4 mx-4 gap-y-4">
                 <div className="col-span-6 md:col-span-4 flex flex-col">
@@ -76,11 +76,11 @@ function Account() {
                 </div>
 
                 <div className="col-span-6 md:col-span-2 grid h-fit gap-y-2">
-                    <ColorButton className="py-2" onClick={() => {navigate("/editaccount")}}>Edit Account</ColorButton>
-                    <ColorButton className="py-2" onClick={() => {navigate("/cart")}}>Cart</ColorButton>
-                    <ColorButton className="py-2" onClick={() => {navigate("/orders")}}>Orders</ColorButton>
+                    <LinkButton className="py-2" link="/editaccount" children="Edit Account"/>
+                    <LinkButton className="py-2" link="/cart" children="Cart"/>
+                    <LinkButton className="py-2" link="/orders" children="Orders"/>
                     
-                    <button className="bg-slate-100 text-slate-700 border border-slate-700 hover:bg-slate-700 hover:text-slate-100 transition duration-700 rounded py-2" onClick={ClearToken}>
+                    <button className="bg-slate-100 text-slate-700 border border-slate-700 hover:bg-slate-700 hover:text-slate-100 transition duration-700 rounded py-2" onClick={SignOut}>
                         Sign Out
                     </button>
                 </div>  
@@ -90,14 +90,12 @@ function Account() {
     
 
   return (
-    <div className="py-8 flex justify-center ">
+    <PageBase>
         <div className="container flex flex-col items-center">
-            <h1 className="text-2xl text-center">Your Account</h1>
-            <h1 className="w-11/12 border-b-2 mt-3 place-self-center"></h1>
+            <PageHeading className="w-11/12" children="Your Account"/>
             {accountinfo}
-        </div>
-    </div>
-    
+        </div>  
+    </PageBase>    
   )
 }
 

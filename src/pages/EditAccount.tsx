@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import TaxInfo from "../assets/info/TaxInfo"
-import ColorButton from "../components/ColorButton";
 import API_URL from '../assets/info/URLInfo'
+
+import ColorButton from "../components/ColorButton";
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
 
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem';
 import LinearProgress from '@mui/material/LinearProgress';
+
 
 function EditAccount() {
     const Tax = TaxInfo
@@ -120,19 +126,22 @@ function EditAccount() {
         }
     }, [completedfetch]);
 
-    // Conditional Rendering if not signed in ///////////////////
+    // HTML if not signed in ///////////////////
     if (token === undefined){
         var editaccount =
         <div className="mt-6">
           <p className="text-lg text-center">Sign In to Update Account</p>
           <div className="flex justify-items-center justify-center mt-2">
-            <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
+            <LinkButton className="p-3" children="Sign In" link="/signin"/>
           </div>
           <div className="flex justify-items-center justify-center">
             <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
           </div>
         </div>
-    } else{
+    } 
+    // HTML if signed in ///////////////////
+    else{
+        // HTML while loading ///////////////
         if (isLoading) {
             var editaccount =
             <div className="mt-6">
@@ -141,47 +150,46 @@ function EditAccount() {
                     <LinearProgress className="mt-3 w-full"/>
                 </div>
             </div>
-        } else {
-            var editaccount=
-      <>
-        <form onSubmit={EditAccountForm} className="grid grid-cols-6 w-11/12 md:w-3/5 2xl:w-1/3 mt-5 gap-x-4 gap-y-3 justify-center">
-            <TextField name="first_name" label="First Name" className="col-span-6 md:col-span-3" required value={first_name} onChange={(event) => setFirstName(event.target.value)} InputLabelProps={{shrink: true}}/>
-            <TextField name="last_name" label="Last Name" className="col-span-6 md:col-span-3" required value={last_name} onChange={(event) => setLastName(event.target.value)} InputLabelProps={{shrink: true}}/>
+        } 
+        // HTML for edit account form ///////////////
+        else {
+        var editaccount=
+            <form onSubmit={EditAccountForm} className="grid grid-cols-6 w-11/12 md:w-3/5 2xl:w-1/3 mt-5 gap-x-4 gap-y-3 justify-center">
+                <TextField name="first_name" label="First Name" className="col-span-6 md:col-span-3" required value={first_name} onChange={(event) => setFirstName(event.target.value)} InputLabelProps={{shrink: true}}/>
+                <TextField name="last_name" label="Last Name" className="col-span-6 md:col-span-3" required value={last_name} onChange={(event) => setLastName(event.target.value)} InputLabelProps={{shrink: true}}/>
 
-            <div className="col-span-6 h-2"/>
+                <div className="col-span-6 h-2"/>
 
-            <TextField name="address_street" label="Address" className="col-span-6" required value={address_street} onChange={(event) => setAddressStreet(event.target.value)} InputLabelProps={{shrink: true}}/>
-            <TextField name="address_city" label="City" className="col-span-3" required value={address_city} onChange={(event) => setAddressCity(event.target.value)} InputLabelProps={{shrink: true}}/>
-            <TextField name="address_state" label="State" className="col-span-1" required select value={address_state} defaultValue={address_state} onChange={(event) => setAddressState(event.target.value)} InputLabelProps={{shrink: true}}>
-                {states.map((state) => (
-                    <MenuItem key={state} value={state}>
-                        {state}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <TextField name="address_zipcode" label="Zip Code" className="col-span-2" required type="number" value={address_zipcode} onChange={(event) => setAddressZipCode(event.target.value)} InputLabelProps={{shrink: true}} inputProps={{ minLength:5, maxLength:5 }} />
-            <TextField name="phone_number" label="Phone Number" className="col-span-6" required type="number" value={phone_number} onChange={(event) => setPhoneNumber(event.target.value)} InputLabelProps={{shrink: true}} inputProps={{ minLength: 10, maxLength: 15 }}/>
+                <TextField name="address_street" label="Address" className="col-span-6" required value={address_street} onChange={(event) => setAddressStreet(event.target.value)} InputLabelProps={{shrink: true}}/>
+                <TextField name="address_city" label="City" className="col-span-3" required value={address_city} onChange={(event) => setAddressCity(event.target.value)} InputLabelProps={{shrink: true}}/>
+                <TextField name="address_state" label="State" className="col-span-1" required select value={address_state} defaultValue={address_state} onChange={(event) => setAddressState(event.target.value)} InputLabelProps={{shrink: true}}>
+                    {states.map((state) => (
+                        <MenuItem key={state} value={state}>
+                            {state}
+                        </MenuItem>
+                    ))}
+                </TextField>
+                <TextField name="address_zipcode" label="Zip Code" className="col-span-2" required type="number" value={address_zipcode} onChange={(event) => setAddressZipCode(event.target.value)} InputLabelProps={{shrink: true}} inputProps={{ minLength:5, maxLength:5 }} />
+                <TextField name="phone_number" label="Phone Number" className="col-span-6" required type="number" value={phone_number} onChange={(event) => setPhoneNumber(event.target.value)} InputLabelProps={{shrink: true}} inputProps={{ minLength: 10, maxLength: 15 }}/>
 
-            <div className="col-span-6 h-2"/>
-            
-            <div className="col-span-1"/>
-            <ColorButton type="submit" children="Update Account" className="col-span-4 text-lg py-2"/>
-            <div className="col-span-1"/>
-        </form> 
-        </>
+                <div className="col-span-6 h-2"/>
+                
+                <div className="col-span-1"/>
+                <ColorButton type="submit" children="Update Account" className="col-span-4 text-lg py-2"/>
+                <div className="col-span-1"/>
+            </form>
         }
       
     }
       
-
   return (
-    <div className="py-10 flex justify-center">
+    <PageBase>
         <div className="container flex flex-col items-center">
-            <h1 className="text-2xl border-b-2 w-11/12 md:w-3/5 2xl:w-1/3 text-center">Update Account</h1>
+            <PageHeading className="w-11/12 md:w-3/5 2xl:w-1/3" children="Update Account"/>
             {errorDiv}
             {editaccount}
         </div>
-    </div>
+    </PageBase>
     
   )
 }

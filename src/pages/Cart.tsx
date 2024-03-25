@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate} from "react-router-dom";
-import ColorButton from "../components/ColorButton";
+import { Link } from "react-router-dom";
+
 import ModelInfo from "../assets/info/ModelInfo"
 import API_URL from '../assets/info/URLInfo'
+
+import ColorButton from "../components/ColorButton";
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
+
 import LinearProgress from '@mui/material/LinearProgress';
 
 
@@ -11,9 +17,6 @@ function Cart() {
   // Populates page info /////////////////////////////
   const [token, setToken] = useState();
   const [cart, setCart] = useState<any>([]);
-  const navigate = useNavigate()
-
-  // Handles loading while waiting for api //////////////////
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -94,29 +97,46 @@ function Cart() {
   }, [completedfetch]);
 
 
-  // Conditional Rendering if not signed in /////////////////
+  // HTML if not signed in /////////////////
   if (token === undefined){
     var cart_html =
     <>
       <h1 className="text-center text-lg mt-6 col-span-6">Sign In to See Your Cart</h1>
       <div className="col-span-6 flex justify-center">
-        <ColorButton className="py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
+        <LinkButton className="py-2 px-4" children="Sign In" link="/signin"/>
       </div>
       <div className="col-span-6 flex justify-center">
         <Link to="/signup" className="text-xs hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
       </div>
     </>
-} else{
-  if (isLoading == false) {
-    if (cart.length === 0){
+  } 
+  // HTML if signed in /////////////////
+  else{
+    // HTML if loading /////////////////
+    if (isLoading)
+    {
       var cart_html =
-      <>
-        <h1 className="text-center text-lg mt-6 col-span-6">Your Cart is Empty</h1>
-        <div className="col-span-6 flex justify-center mt-2">
-          <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
+        <div className="mt-6 col-span-6">
+            <p className="text-lg text-center">Loading your cart</p>
+            <div className="w-full flex text-center justify-center">
+                <LinearProgress className="mt-3 w-1/2"/>
+            </div>
         </div>
-      </>
-    } else{
+    }
+    // HTML after loading /////////////////
+    else{
+      // HTML if cart empty /////////////////
+      if (cart.length === 0){
+        var cart_html =
+        <>
+          <h1 className="text-center text-lg mt-6 col-span-6">Your Cart is Empty</h1>
+          <div className="col-span-6 flex justify-center mt-2">
+            <LinkButton className="py-2 px-4" children="Shop Bikes" link="/"/>
+          </div>
+        </>
+      }
+      // HTML if cart has items /////////////////
+      else{
       var cart_html =
       <>
         <div className="mt-4 col-span-6 md:col-span-4 grid gap-y-4 place-self-center">
@@ -132,12 +152,11 @@ function Cart() {
                 <p>Qty:</p>
                 <input className='hidden' name='cart_id' value={bike.cart_id} readOnly/>
                 <input className='border w-8 text-center' type="number" name='quantity' placeholder= {bike.quantity} />
-                <ColorButton className="p-1 text-xs" type="submit">Update</ColorButton>
+                <ColorButton className="p-1 text-xs" type="submit" children="Update"/>
               </form>
               <p className="mt-1">${bike.cart_itemtotal}</p>
-              <ColorButton onClick={() => RemoveFromCart(bike.cart_id)} className="text-xs p-2 mt-1 w-fit">Remove From Cart</ColorButton>
+              <ColorButton onClick={() => RemoveFromCart(bike.cart_id)} className="text-xs p-2 mt-1 w-fit" children="Remove From Cart"/>
             </div>
-            
           </div>
           ))}
         </div>
@@ -154,33 +173,22 @@ function Cart() {
             <p className="mt-4 font-semibold text-end">${cartotal}.00</p>
             <p/>
             <div className="flex justify-end mt-1">
-              <ColorButton className="py-2 px-4 w-fit" onClick={() => {navigate("/checkout")}}>Check Out</ColorButton>
+              <LinkButton className="py-2 px-4 w-fit" children="Check Out" link="/checkout"/>
             </div>
           </div>
         </div>
       </>
     }
-  } else {
-    var cart_html =
-      <div className="mt-6 col-span-6">
-          <p className="text-lg text-center">Loading your cart</p>
-          <div className="w-full flex text-center justify-center">
-              <LinearProgress className="mt-3 w-1/2"/>
-          </div>
-      </div>
   }
 }
   
-
   return (
-    <div className="py-10 flex justify-center">
+    <PageBase>
       <div className="container mx-2 grid grid-cols-6 gap-x-4 gap-y-2 ">
-        <h1 className="text-2xl col-span-6 text-center">Your Cart</h1>
-        <h1 className="col-span-6 w-11/12 border-b-2 mt-3 place-self-center"></h1>
+        <PageHeading className="w-11/12 col-span-6 place-self-center" children="Your Cart"/>
         {cart_html}
       </div>
-    </div>
-    
+    </PageBase>    
   )
 }
 

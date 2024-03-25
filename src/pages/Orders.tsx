@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ColorButton from "../components/ColorButton";
+import { Link } from "react-router-dom";
+
 import ModelInfo from "../assets/info/ModelInfo";
 import API_URL from '../assets/info/URLInfo'
+
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
+
 import LinearProgress from '@mui/material/LinearProgress';
 
 function Orders() {
@@ -10,7 +15,6 @@ function Orders() {
   // Populates page info /////////////////////////////
   const [token, setToken] = useState();
   const [orders, setOrders] = useState<any>([]);
-  const navigate = useNavigate()
 
   // Handles loading while waiting for api //////////////////
   const [isLoading, setIsLoading] = useState(false);
@@ -36,19 +40,22 @@ function Orders() {
   }, []);
   
 
-  // Conditional rendering if not signed in ///////////////////////
+  // HTML if not signed in ///////////////////////
   if (token === undefined){
       var order_html =
       <div className="mt-6">
         <p className="text-lg text-center">Sign In To See Your Orders</p>
         <div className="flex justify-items-center justify-center mt-2">
-          <ColorButton className="p-3" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
+          <LinkButton className="p-3" children="Sign In" link="/signin"/>
         </div>
         <div className="flex justify-items-center justify-center">
           <Link to="/signup" className=" text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
         </div>
       </div>
-  } else{
+  } 
+  // HTML if signed in //////////
+  else{
+    // HTML while loading //////////
     if (isLoading) {
       var order_html =
       <div className="mt-6">
@@ -57,18 +64,21 @@ function Orders() {
               <LinearProgress className="mt-3 w-1/2"/>
           </div>
       </div>
-      
-  } else {
-    if (orders.length === 0){
-      var order_html =
-      <div className="mt-6">
-        <p className="text-lg text-center">Your Have No Orders</p>
-        <div className="flex justify-items-center justify-center mt-2">
-          <ColorButton className="p-3" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
+    }
+    // HTML after loading
+    else {
+      // HTML if no orders ////////
+      if (orders.length === 0){
+        var order_html =
+        <div className="mt-6">
+          <p className="text-lg text-center">Your Have No Orders</p>
+          <div className="flex justify-items-center justify-center mt-2">
+            <LinkButton className="p-3" children="Shop Bikes" link="/"/>
+          </div>
         </div>
-      </div>
-
-    } else{
+      }
+      // HTML for orders ///////////
+      else{
       var order_html =
       <>
       {orders.map((order:any) => (
@@ -111,18 +121,16 @@ function Orders() {
       </>
     }
   }
-    
   }
 
-  
   return (
-    <div className=" py-6 flex justify-center">
+    <PageBase>
       <div className="container mx-2">
-      <h1 className="text-2xl text-center">Your Orders</h1>
-      <p className="w-full border-b-2 mt-3"></p>
-        {order_html}
+        <PageHeading className="w-11/12" children="Your Orders"/>
+        <p className="w-full border-b-2 mt-3"></p>
+          {order_html}
       </div>
-    </div>
+    </PageBase>
   )
 }
 

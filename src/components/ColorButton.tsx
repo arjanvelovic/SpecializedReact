@@ -10,9 +10,7 @@ function ColorButton(props: ButtonProps) {
 
   return (
     <button onClick={ props.onClick } className={combinedClassName} type={ props.type }>
-
-    { props.children}
-
+    { props.children }
     </button>
   )
 }

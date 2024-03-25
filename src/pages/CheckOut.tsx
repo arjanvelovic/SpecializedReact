@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ColorButton from "../components/ColorButton";
+import { Link } from "react-router-dom";
+
 import TaxInfo from "../assets/info/TaxInfo"
 import ModelInfo from "../assets/info/ModelInfo";
 import API_URL from '../assets/info/URLInfo'
+import LinkButton from "../components/LinkButton";
+
+import ColorButton from "../components/ColorButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
 
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem';
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
 
+
 function CheckOut() {
 
 // Populates page ///////////////////////////////////////
   const [token, setToken] = useState();
   const [cart, setCart] = useState<any>([]);
-  // @ts-ignore
-  const [userinfo, setUserInfo] = useState<any>([]);
+
   const [first_name, setFirstName] = useState<any>();
   const [last_name, setLastName] = useState<any>();
   const [phone_number, setPhoneNumber] = useState<any>();
@@ -28,7 +33,6 @@ function CheckOut() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const navigate = useNavigate()
 
   // Handles loading while waiting for api //////////////////
   const [isLoading, setIsLoading] = useState(false);
@@ -53,8 +57,6 @@ function CheckOut() {
         method: 'GET'})
     .then((response) => response.json())
     .then((response) => {
-        // console.log(response);
-        setUserInfo(response)
         setFirstName(response.first_name)
         setLastName(response.last_name)
         setPhoneNumber(response.phone_number)
@@ -71,7 +73,7 @@ function CheckOut() {
   }, []);
 
 
-// Populates/Updates Price ///////////////////////////////////////
+// Populates/Updates Price ////////////////////////////
   var subtotal = 0
   for (var bike of cart){
     subtotal += Number(bike.cart_itemtotal)
@@ -161,32 +163,33 @@ function CheckOut() {
 
 // Clears cart after order placed ////////////////////////////////
     const ClearCart = () => {
-        fetch(`${API_URL}/clearcart/${token}`, {
-            method: 'DELETE'})
-        .then((response) => response.json())
-        // @ts-ignore
-        .then((response) => {
-            // console.log(response);
-            })
-        .catch((error) => {
-        console.error(error);
-        });
-        }
+      fetch(`${API_URL}/clearcart/${token}`, {
+          method: 'DELETE'})
+      .then((response) => response.json())
+      // @ts-ignore
+      .then((response) => {})
+      .catch((error) => {
+      console.error(error);
+      });
+      }
 
 
-// Conditional Rendering if not Signed in /////////////////////////
+  // HTML if not Signed in /////////////////////////
   if (token == undefined){
     var checkout_html =
     <>
       <h1 className="text-center text-lg mt-6 col-span-6">Sign In to Check Out</h1>
       <div className="col-span-6 flex justify-center mt-2">
-        <ColorButton className="py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In</ColorButton>
+        <LinkButton className="py-2 px-4" children="Sign In" link="/signin"/>
       </div>
       <div className="col-span-6 flex justify-center mt-2">
         <Link to="/signup" className="text-xs hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
       </div>
     </>
-  } else{
+  }
+  // HTML if Signed in ////////////////////
+  else{
+    // HTML if loading ////////////////////
     if (isLoading) {
       var checkout_html =
         <div className="mt-6">
@@ -197,15 +200,17 @@ function CheckOut() {
         </div>
 
     } else {
+      // HTML if cart empty ////////////////////
       if (cart.length === 0){
         var checkout_html =
         <>
           <h1 className="text-center text-lg mt-6 col-span-6">You have no bikes to check out</h1>
           <div className="col-span-6 flex justify-center mt-2">
-            <ColorButton className="py-2 px-4" onClick={() => {navigate("/")}}>Shop Bikes</ColorButton>
+            <LinkButton className="py-2 px-4" children="Shop Bikes" link="/"/>
           </div>
         </>
       } else{
+        // HTML if cart has items ////////////////////
         var checkout_html =
         <>
           {cart.map((bike:any) => (
@@ -221,7 +226,8 @@ function CheckOut() {
               </div>
             </div>
             ))}
-          <div className="">
+
+          <div>
           <form onSubmit={PlaceOrderForm} className="container px-4 grid grid-cols-6 gap-x-10 gap-y-10 mt-10">
             <div className="col-span-6 md:col-span-4 grid grid-cols-6 gap-x-4 gap-y-3 justify-center">
               <p className="col-span-6 text-lg">Delivery Details</p>
@@ -295,9 +301,8 @@ function CheckOut() {
   }
 
   return (
-    <div className=" py-8 flex justify-center flex-col place-items-center">
-      <h1 className="text-2xl w-11/12 text-center">Check Out</h1>
-      <h1 className="border-b-2 w-11/12 my-3"></h1>
+    <PageBase className="flex-col place-items-center">
+      <PageHeading className="w-11/12 mb-2" children="Check Out"/>
       {errorDiv}
       {checkout_html}
       <Modal
@@ -310,14 +315,13 @@ function CheckOut() {
                       Your Order Has Been Placed!
                   </p>
                   <div className="grid grid-cols-2 gap-2 mt-5">
-                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/orders")}}>Go to Orders</ColorButton>
-                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/")}}>Continue Shopping</ColorButton>
+                    <LinkButton className="py-2 px-3" children="Go to Orders" link="/orders"/>
+                    <LinkButton className="py-2 px-3" children="Continue Shopping" link="/"/>
                   </div>
               </div>
           </div>
       </Modal>
-    </div>
-    
+    </PageBase>
   )
 }
 

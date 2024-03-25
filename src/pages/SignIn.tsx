@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import API_URL from '../assets/info/URLInfo'
+
 import ColorButton from "../components/ColorButton";
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
 
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton';
@@ -12,13 +18,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import API_URL from '../assets/info/URLInfo'
-
 
 function SignIn() {
 
     const [token, setToken] = useState();
-    const navigate = useNavigate()
 
     useEffect(() => {
         // @ts-ignore
@@ -91,7 +94,6 @@ function SignIn() {
     }
 
     // Navigates to homepage after signup ///////////////////////
-
     const [completedfetch, setCompletedFetch] = useState<boolean>(false);
     useEffect(() => {
         if (completedfetch){
@@ -99,7 +101,7 @@ function SignIn() {
         }
     }, [completedfetch]);
 
-    // Conditional rendering if signed in ///////////////////
+    // HTML if not signed in ///////////////////
     if (token === undefined){
         var signin_html =
         <>
@@ -128,35 +130,32 @@ function SignIn() {
                     />
                 </FormControl>
 
-                <div className="col-span-6 h-2"/>
-                
                 <div className="col-span-1"/>
-                <ColorButton type="submit" children="Sign In" className="col-span-4 text-lg py-2"/>
-                
-                
-
+                <ColorButton type="submit" children="Sign In" className="col-span-4 text-lg py-2 mt-3"/>
             </form>
             <Link to="/signup" className="text-xs mt-2 hover:text-red-600 underline-offset-4 hover:underline transition duration-500">Don't have an account? Sign Up</Link>
             {loading_html}
         </>
-    } else{
+    } 
+    // HTML if signed in /////////
+    else{
         var signin_html =
         <>
         <h1 className="text-center text-lg mt-6 col-span-6">Your Are Already Signed In</h1>
         <div className="col-span-6 flex justify-center mt-2">
-            <ColorButton className="py-2 px-4" onClick={() => {navigate("/account")}}>Account</ColorButton>
+            <LinkButton className="py-2 px-4" children="Account" link="/account"/>
         </div>
         </>
     }
 
   return (
-    <div className=" py-10 flex justify-center">
+    <PageBase>
         <div className="container flex flex-col items-center">
-            <h1 className="text-2xl border-b-2 w-11/12 md:w-3/5 2xl:w-1/3 text-center">Sign In</h1>
+            <PageHeading className="w-11/12 md:w-3/5 2xl:w-1/3" children="Sign In"/>
             {errorDiv}
             {signin_html}
         </div>
-    </div>
+    </PageBase>
   )
 }
 

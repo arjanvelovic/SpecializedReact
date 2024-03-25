@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+
 import CategoryInfo from "../assets/info/CategoryInfo"
-import {useParams} from "react-router-dom"
 
-
+import PageBase from "../components/PageBase";
+import PageHeading from "../components/PageHeading";
 
 function Category() {
     const{category} = useParams()
@@ -10,11 +11,11 @@ function Category() {
     const models = Object.keys(CategoryInfo[category])
 
   return (
-    <div className="py-8 flex justify-center">
+    <PageBase>
         <div className="container grid gap-3 justify-items-center">
-            <h1 className="text-2xl text-center">{category} Bikes</h1>
-            <h1 className="w-11/12 border-b-2 place-self-center"></h1>
-
+            <PageHeading className="w-11/12 place-self-center">
+                {category} Bikes
+            </PageHeading>
             <div className="w-11/12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-4">
                 {models.map((model:any) => (
                     
@@ -31,9 +32,7 @@ function Category() {
                 ))}
             </div>
         </div>
-    </div>
-
-    
+    </PageBase>    
   )
 }
 

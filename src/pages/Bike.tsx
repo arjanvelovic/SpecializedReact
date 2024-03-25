@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 import ModelInfo from "../assets/info/ModelInfo"
 import API_URL from '../assets/info/URLInfo'
-import ColorButton from "../components/ColorButton";
 //@ts-ignore
 import SizeChartNumbersBig from '../assets/images/Bikes/SizeChartNumbersBig.png'
 //@ts-ignore
@@ -12,12 +12,17 @@ import SizeChartLettersBig from '../assets/images/Bikes/SizeChartLettersBig.png'
 //@ts-ignore
 import SizeChartLettersSmall from '../assets/images/Bikes/SizeChartLettersSmall.png'
 
+import ColorButton from "../components/ColorButton";
+import LinkButton from "../components/LinkButton";
+import PageBase from "../components/PageBase";
+
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
+
 
 type ModelParams = {
     model: any;
@@ -27,7 +32,6 @@ function Bike() {
 
     // Populates page info /////////////////////////////
     const{model} = useParams<ModelParams>()
-    const roadmodels = ['Allez', 'Tarmac', 'Roubaix', 'Diverge', 'Crux']
     const bike = ModelInfo[model]
     const sizes = bike['sizes']
 
@@ -36,10 +40,9 @@ function Bike() {
     const handleClose = () => setOpen(false);
     const [size, setSize] = useState()
     const [color, setColor] = useState()
-    const navigate = useNavigate()
     
 
-    // Get token and conditioanl rendering //////////////////
+    // Get tokens ////////////////////
     const [token, setToken] = useState();
     useEffect(() => {
         //@ts-ignore
@@ -49,12 +52,15 @@ function Bike() {
         }
     }, []);
 
+    // HTML if not signed in /////////////
     if (token === undefined){
         var user_add_cart =
-        <ColorButton className="text-lg py-2 px-4" onClick={() => {navigate("/signin")}}>Sign In to Add to Cart</ColorButton>
-    } else{
+        <LinkButton className="text-lg py-2 px-4" link="/signin" children="Sign In to Add to Cart"></LinkButton>
+    }
+    // HTML if signed in ///////////// 
+    else{
         var user_add_cart =
-        <ColorButton className="text-lg py-2 px-4" type="submit">Add to Cart</ColorButton>
+        <ColorButton className="text-lg py-2 px-4" type="submit" children="Add to Cart"/>
     }
 
     // Adjust cost based on trim /////////////////////////
@@ -71,7 +77,7 @@ function Bike() {
         prices.push(triminfo[trims[trim]]['cost'])
     }
 
-    // Adjust Image Based on Color /////////////////////////
+    // Adjust Image Based on Color //////////////////////
     const colorinfo = ModelInfo[model]['colors']
     const colors = Object.keys(colorinfo)
     const [pictures, setPictures] = useState<any>(colorinfo[colors[0]])
@@ -80,7 +86,8 @@ function Bike() {
         setPictures(colorinfo[color])
     }
 
-    // Adjust Chart Based on Model
+    // Adjust Chart Based on Model /////////////////
+    const roadmodels = ['Allez', 'Tarmac', 'Roubaix', 'Diverge', 'Crux']
     if(roadmodels.includes(model)){
         var ChartDiv = 
         <>
@@ -144,16 +151,14 @@ function Bike() {
     
 
   return (
-    <div className="py-10 flex justify-center">
+    <PageBase>
         <div className="flex flex-col items-center container mx-2">
             <div className="grid grid-cols-5 gap-x-6 justify-center border border-slate-300 rounded p-2">
                 <h1 className="text-2xl col-span-5 flex md:hidden mb-3">{model} {trim}</h1>
                 <div className="col-span-5 md:col-span-3 xl:col-span-4 grid gap-y-3">
-
                     {pictures.map((picture:any) => (
                         <img src={picture} className='border-4 border-gray-100 rounded' key={picture}/>
                     ))}
-                    
                 </div>
                 <div className="col-span-5 md:col-span-2 xl:col-span-1">
                     <h1 className="text-2xl hidden md:flex">{model} {trim}</h1>
@@ -161,9 +166,11 @@ function Bike() {
 
                     <form onSubmit={AddtoCart} className="">
 
+                        {/* Color Selection */}
                         <div className="mt-4 font-bold">Colors:</div>
                         <fieldset id = "colors" className="grid grid-cols-4 md:grid-cols-3 w-fit gap-3">
                         {colors.map((color:any, i: number) => {
+                            // Automatic selection of first color ///////
                             if (i == 0){
                                 return(  
                                 <div className="" key={color}>
@@ -186,21 +193,23 @@ function Bike() {
                         })}
                         </fieldset>
 
+                        {/* Size Selection */}
                         <div className="mt-4 font-bold">Sizes:</div>
-                        <fieldset id = "sizes" className="grid grid-cols-6 md:grid-cols-4 w-fit gap-3">
+                        <fieldset id = "sizes" className="grid grid-cols-3 w-fit gap-3">
                         {sizes.map((size:any, i:number) => {
+                            // Automatic selection of first size ///////
                             if (i == 0){
                                 return(
                                     <div className="" key={size}>
                                         <input type="radio" id={size} value={size} defaultChecked name="sizes" className="hidden peer"/>
-                                        <label htmlFor={size} className="inline-flex py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{size}</label>
+                                        <label htmlFor={size} className="inline-flex w-full h-full text-center place-content-center place-items-center py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100">{size}</label>
                                     </div>
                                 )
                             } else {
                                 return(
                                     <div className="" key={size}>
                                         <input type="radio" id={size} value={size} name="sizes" className="hidden peer"/>
-                                        <label htmlFor={size} className="inline-flex py-2 px-5 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100 ">{size}</label>
+                                        <label htmlFor={size} className="inline-flex w-full h-full text-center place-content-center place-items-center p-2 text-gray-500 bg-white border border-gray-200 rounded cursor-pointer peer-checked:border-slate-800 peer-checked:text-slate-900 hover:text-slate-600 hover:bg-gray-100">{size}</label>
                                     </div>
                                 )
 
@@ -209,9 +218,11 @@ function Bike() {
                         )}
                         </fieldset>
 
+                        {/* Trim Selection */}
                         <div className="mt-4 font-bold">Trims:</div>
-                        <fieldset id = "trims" className="grid grid-cols-5 md:grid-cols-3 w-fit gap-3">
+                        <fieldset id = "trims" className="grid grid-cols-3 w-fit gap-3">
                         {trims.map((trim:any, i:number) =>{
+                            // Automatic selection of first trim ///////
                             if (i == 0){
                                 return(
                                     <div className="" key={trim}>
@@ -238,6 +249,8 @@ function Bike() {
                             {user_add_cart}
                             {loading_html}
                         </div>
+
+                        {/* Modal after success add to cart */}
                         <Modal
                             open={open}
                             onClose={handleClose}
@@ -252,17 +265,20 @@ function Bike() {
                                         has been added to your cart!
                                     </p>
                                     <div className="grid grid-cols-2 gap-2 mt-5">
-                                    <ColorButton className="py-2 px-3" onClick={() => {navigate("/cart")}}>Go to Cart</ColorButton>
-                                    <ColorButton className='py-2 px-3' onClick={() => {setOpen(false)}}>Continue Shopping</ColorButton>
+                                        <LinkButton className="py-2 px-3" children="Go to Cart" link="/cart"/>
+                                        <ColorButton className='py-2 px-3' onClick={() => {setOpen(false)}} children="Continue Shopping"/>
                                     </div>
                                 </div>
                             </div>
                         </Modal>
-
                     </form>
                 </div>
             </div>
+
+            {/* Bike Detail Section */}
             <div className="mt-5 mx-2 container">
+
+                {/* Bike Description */}
                 <Accordion defaultExpanded>
                     <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -282,6 +298,8 @@ function Bike() {
                     </div>
                     </AccordionDetails>
                 </Accordion>
+
+                {/* Spectification Section */}
                 <Accordion>
                     <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -367,6 +385,8 @@ function Bike() {
                     </div>
                     </AccordionDetails>
                 </Accordion>
+
+                {/* Size Chart */}
                 <Accordion>
                     <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -379,9 +399,10 @@ function Bike() {
                         {ChartDiv}
                     </AccordionDetails>
                 </Accordion>
+
             </div>
         </div>
-    </div>
+    </PageBase>
   )
 }
 

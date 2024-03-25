@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Drawer from "@mui/material/Drawer";
 import NavButton from './NavButton';
+import SignOut from './SignOut';
 //@ts-ignore
 import WordLogoSmall from '../assets/images/navbar/WordLogoSmall.png'
 //@ts-ignore
@@ -17,12 +18,6 @@ function Navbar() {
     const [isVisible2, setIsVisible2] = useState(false)
     const [open, setState] = useState(false);
     const [token, setToken] = useState();
-
-    const ClearToken = (event: any) => {
-    event.preventDefault();
-    localStorage.clear()
-    window.location.href = "/"
-    }
 
     const ClearToken2 = (event: any) => {
         event.preventDefault();
@@ -89,7 +84,7 @@ function Navbar() {
         <div>
         <Link to="/account" onClick={pullUp}><i className="fa-solid fa-user text-xl mx-2 hover:text-red-600 hover:opacity-90 transition duration-500"/></Link>
         <Link to="/cart" onClick={pullUp}><i className="fa-solid fa-cart-shopping text-xl mx-2 hover:text-red-600 hover:opacity-90 transition duration-500"/></Link>
-        <NavButton className='mx-2' onClick={ClearToken}>
+        <NavButton className='mx-2' onClick={SignOut}>
             Sign Out
         </NavButton>
         </div>
@@ -167,10 +162,10 @@ function Navbar() {
             </div>
             
             <div className='mt-2 flex flex-col border-t-2 gap-y-2 justify-end mx-5'>
-                <NavButton className='text-end pt-2 border-t'><Link to='/' onClick={toggleDrawer(false)}>Home</Link></NavButton>
-                <NavButton className='text-end pt-2 border-t' onClick={dropDown2}>
-                    Bikes
+                <NavButton className='text-end pt-2 border-t'>
+                    <Link to='/' onClick={toggleDrawer(false)}>Home</Link>
                 </NavButton>
+                <NavButton className='text-end pt-2 border-t' onClick={dropDown2} children={'Bikes'}/>
                 
                 { isVisible2 ? (
                     <div className='md:hidden grid gap-3'>
