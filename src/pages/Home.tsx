@@ -14,7 +14,7 @@ function Home() {
   return (
     <div className='pb-10'>
       <div className = 'container2'>
-        <video className='object-cover w-full h-[93vh]' muted autoPlay loop>
+        <video className='object-cover w-full h-[93dvh]' muted autoPlay loop>
           <source src={HomeVideo} type="video/mp4" ></source>
         </video>
         <div className='overlap3 flex justify-center'>

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Drawer from "@mui/material/Drawer";
-import NavButton from './NavButton';
-import SignOut from './SignOut';
+
 //@ts-ignore
 import WordLogoSmall from '../assets/images/navbar/WordLogoSmall.png'
 //@ts-ignore
@@ -11,6 +9,11 @@ import RoadTrans from '../assets/images/navbar/RoadTrans.png'
 import MountainTrans from '../assets/images/navbar/MountainTrans.png'
 //@ts-ignore
 import ActiveTrans from '../assets/images/navbar/ActiveTrans.png'
+
+import NavButton from './NavButton';
+import SignOut from './SignOut';
+
+import Drawer from "@mui/material/Drawer";
 
 
 function Navbar() {
@@ -58,7 +61,7 @@ function Navbar() {
         setIsVisible2(false);
     };
 
-    // Conditional Rendering if signed in ///////////////
+    // HTML if not signed in ///////////////
     if (token === undefined){
         var user_options =
         <div>
@@ -79,7 +82,9 @@ function Navbar() {
             <Link to="/signup">Sign Up</Link>
         </button>
         </div>
-    } else{
+    } 
+    // HTML if signed in ///////////////
+    else{
         var user_options =
         <div>
         <Link to="/account" onClick={pullUp}><i className="fa-solid fa-user text-xl mx-2 hover:text-red-600 hover:opacity-90 transition duration-500"/></Link>
@@ -103,10 +108,11 @@ function Navbar() {
         </div>
     }
 
-
     return (
     <nav className='flex bg-white h-full py-3 justify-center border-b border-slate-200'>
         <div className='grid grid-cols-2 md:grid-cols-4 w-10/12'>
+
+            {/* Left side of Nav Bar */}
             <div id='navlogo' className='flex items-center'>
                 <Link to='/'><img src={WordLogoSmall} className='h-8 md:max-h-12 md:w-auto opacity-70 hover:opacity-100 transition duration-700'/></Link>
             </div>
@@ -115,16 +121,19 @@ function Navbar() {
                     <Link to='/'>Home</Link>
                 </NavButton>
                 <NavButton className='m-3' onClick={dropDown} children={'Bikes'}/>
-
             </div>
+
+            {/* Right Side */}
             <div className='hidden md:flex justify-self-end items-center'>
                 {user_options}
             </div>
+            {/* Hamburger Button */}
             <div className="md:hidden flex justify-end items-center">
                 <NavButton children = {<i className='fas fa-bars'></i>} className={'py-2 px-4 text-xl'} onClick={toggleDrawer(true)}/>
             </div>
         </div>
 
+        {/* Bikes Drop down for large screens */}
         { isVisible ? (
             <div className='w-full border-b-2 bg-white hidden md:flex z-10 absolute mt-10 justify-center'>
                 <div className='3/5 lg:w-1/2 grid grid-cols-3 gap-2'>
@@ -146,6 +155,7 @@ function Navbar() {
             <></>
         ) }
 
+    {/* Drawer for small screens */}
     <Drawer
         anchor="top"
         open={open}
@@ -155,7 +165,6 @@ function Navbar() {
         className='md:hidden'
         transitionDuration= {500}
         >
-        {/* The inside of the drawer */}
         <div className='bg-gray-50 md:hidden mb-2'>
             <div className='text-start my-3 mx-5'>
                 <NavButton children = {<i className="fa-solid fa-x"></i>} className={'py-2 px-4'} onClick={toggleDrawer(false)}/>
@@ -165,8 +174,9 @@ function Navbar() {
                 <NavButton className='text-end pt-2 border-t'>
                     <Link to='/' onClick={toggleDrawer(false)}>Home</Link>
                 </NavButton>
+
                 <NavButton className='text-end pt-2 border-t' onClick={dropDown2} children={'Bikes'}/>
-                
+                {/* Bike drop down for small screens */}
                 { isVisible2 ? (
                     <div className='md:hidden grid gap-3'>
                         <Link to='/categories/Road' className='hover:opacity-70 transition duration-500 self-center justify-self-center text-center' onClick={toggleDrawer(false)}>
